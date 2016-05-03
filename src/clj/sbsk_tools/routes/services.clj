@@ -38,6 +38,6 @@
 
         (context "/api/events" []
                  :tags ["Events"]
-                 (GET "/events" []
+                 (GET "/" []
                       :summary "Returns all events in Norway for the current year"
                       (ok (scrape-event-data (fetch-event-page))))))
