@@ -1,14 +1,30 @@
 # sbsk-tools
 
-generated using Luminus version "2.9.10.46"
+Web application to host various archery related tools for use by [Sverresborg Bueskyttere in Trondheim][1].
 
-FIXME
+
+## Features
+
+### Complete
+
+None yet
+
+
+### In progress
+
+* Event list with filtering possibilites to find local events.
+
+
+### Future plans
+
+* Event signups
+* Link collection to online resources (arrow selectors, tuning guides etc.)
+
 
 ## Prerequisites
 
-You will need [Leiningen][1] 2.0 or above installed.
+You will need [Leiningen][2] 2.0 or above installed.
 
-[1]: https://github.com/technomancy/leiningen
 
 ## Running
 
@@ -16,6 +32,6 @@ To start a web server for the application, run:
 
     lein run
 
-## License
 
-Copyright © 2016 FIXME
+[1]: https://sbsk.no
+[2]: https://github.com/technomancy/leiningen

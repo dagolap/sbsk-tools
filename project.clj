@@ -1,7 +1,7 @@
 (defproject sbsk-tools "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Archery related tools used by Sverresborg Bueskyttere in Trondheim"
+  :url "https://sbsk.no"
 
   :dependencies [[luminus-log4j "0.1.3"]
                  [metosin/compojure-api "1.1.0"]
