@@ -27,4 +27,4 @@
                              500 {:description "Could not download from IANSEO"}}
                  (GET "/" []
                       :summary "Returns all events in Norway for the current year"
-                      (ok (eventsapi/scrape-event-data (eventsapi/fetch-event-page))))))
+                      (ok (eventsapi/map-all-events)))))

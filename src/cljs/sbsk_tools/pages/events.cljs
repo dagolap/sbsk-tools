@@ -1,7 +1,6 @@
 (ns sbsk-tools.pages.events
   (:require [reagent.core :as r]
             [cljs-time.core :as time]
-            [cljs-time.format :as timef]
             [ajax.core :refer [GET POST]]))
 
 (def view-configuration (r/atom {

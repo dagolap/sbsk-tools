@@ -1,8 +1,7 @@
 (ns sbsk-tools.routes.events
   (:require [net.cgrand.enlive-html :as e]
             [clojure.string :as str]
-            [clj-time.core :as time]
-            [clj-time.format :as timef])
+            [clj-time.core :as time])
   (:import (java.net URL)))
 
 (defn month-name-to-number [month-name]
@@ -20,33 +19,36 @@
     "nov." 11
     "des." 12))
 
-;; Do some fancy caching and something
+;; TODO: Do some fancy caching and something
+;; ----------------
+;; Fetch web page
 (defonce event-page-data
          (e/html-resource (URL. "http://nor.service.ianseo.net/General/CompetitionList.php?Lang=en")))
 
+;; ----------------
+;; Helper functions to retrieve correct data from a line
 (defn retrieve-date [content]
   (.trim (first (:content (nth content 2)))))
 
-(defn parse-to-date [date-parts]
-  (.toDate (time/date-time (Integer/parseInt (nth date-parts 2)) (month-name-to-number (second date-parts)) (Integer/parseInt (first date-parts)))))
-  ;(timef/unparse (timef/formatters :basic-date-time) (time/date-time (Integer/parseInt (nth date-parts 2)) (month-name-to-number (second date-parts)) (Integer/parseInt (first date-parts)))))
+(defn retrieve-organizer [content]
+  (second (:content (nth content 3))))
 
-(defn map-line [line]
+(defn date-from-parts [date-parts]
+  (.toDate (time/date-time (Integer/parseInt (nth date-parts 2)) (month-name-to-number (second date-parts)) (Integer/parseInt (first date-parts)))))
+
+;; -----------------
+;; Map a line to a reasonable data structure
+(defn map-event [line]
   "Converts a line into a more reasonable struct"
   (let [content (:content line)]
     {
      :event-id        (first (:content (first (:content (nth content 1)))))
      :organizer-short (first (:content (first (:content (nth content 3)))))
-     :organizer-full  (str/trim (if (nil? (second (:content (nth content 3)))) "" (subs (second (:content (nth content 3))) 3)))
+     :organizer-full  (str/trim (if (nil? (retrieve-organizer content)) "" (subs (retrieve-organizer content) 3)))
      :competition     (first (:content (nth content 4)))
-     :date            (parse-to-date (str/split (retrieve-date content) #"\s"))
+     :date            (date-from-parts (str/split (retrieve-date content) #"\s"))
      :comments        (first (:content (nth content 5)))}))
 
-
-
-(defn fetch-event-page []
+(defn map-all-events []
   "Retrieves all events from the Norwegian event list."
-  (map map-line (e/select event-page-data [:tr.status1])))
-
-(defn scrape-event-data [page-data]
-  page-data)
+  (map map-event (e/select event-page-data [:tr.status1])))
