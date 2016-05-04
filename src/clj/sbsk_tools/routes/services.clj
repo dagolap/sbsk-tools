@@ -11,8 +11,8 @@
                     :organizer-full  (rs/describe (s/maybe s/Str) "Organizer full club name.")
                     :competition     (rs/describe (s/maybe s/Str) "Competition type (e.g. 18m or 720-runde).")
                     :date            (rs/describe (s/maybe s/Any) "Start date of event.")
-                    :comments        (rs/describe (s/maybe s/Str) "Comments describing location, special comments and names etc.")
-                    })
+                    :comments        (rs/describe (s/maybe s/Str) "Comments describing location, special comments and names etc.")})
+
 
 (defapi service-routes
         {:swagger {:ui   "/swagger-ui"
