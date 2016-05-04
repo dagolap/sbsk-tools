@@ -37,7 +37,7 @@
     {
      :event-id        (first (:content (first (:content (nth content 1)))))
      :organizer-short (first (:content (first (:content (nth content 3)))))
-     :organizer-full  (second (:content (nth content 3)))   ;; TODO: Remove first 3 chars and trim()
+     :organizer-full  (str/trim (if (nil? (second (:content (nth content 3)))) "" (subs (second (:content (nth content 3))) 3)))
      :competition     (first (:content (nth content 4)))
      :date            (parse-to-date (str/split (retrieve-date content) #"\s"))
      :comments        (first (:content (nth content 5)))}))
