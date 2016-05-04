@@ -2,32 +2,17 @@
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
-            [net.cgrand.enlive-html :as e])
-  (:import (java.net URL)))
+            [ring.swagger.schema :as rs]
+            [sbsk-tools.routes.events :as eventsapi]))
 
-;; Do some fancy caching and something
-(defonce event-page-data
-         (e/html-resource (URL. "http://nor.service.ianseo.net/General/CompetitionList.php?Lang=en")))
-
-(defn map-line [line]
-  "Converts a line into a more reasonable struct"
-  (let [content (:content line)]
-    {
-     :event-id        (first (:content (first (:content (nth content 1)))))
-     :organizer-short (first (:content (first (:content (nth content 3)))))
-     :date            (.trim (first (:content (nth content 2)))) ;; TODO: Parse to date?
-     :organizer-full  (second (:content (nth content 3)))   ;; TODO: Remove first 3 chars and trim()
-     :competition     (first (:content (nth content 4)))
-     :comments        (first (:content (nth content 5)))
-     }
-    ))
-
-(defn fetch-event-page []
-  "Retrieves all events from the Norwegian event list."
-  (map map-line (e/select event-page-data [:tr.status1])))
-
-(defn scrape-event-data [page-data]
-  page-data)
+(s/defschema Event {
+                    :event-id        (rs/describe (s/maybe s/Str) "National unique ID for event.")
+                    :organizer-short (rs/describe (s/maybe s/Str) "Organizer short form.")
+                    :organizer-full  (rs/describe (s/maybe s/Str) "Organizer full club name.")
+                    :competition     (rs/describe (s/maybe s/Str) "Competition type (e.g. 18m or 720-runde).")
+                    :date            (rs/describe (s/maybe s/Any) "Start date of event.")
+                    :comments        (rs/describe (s/maybe s/Str) "Comments describing location, special comments and names etc.")
+                    })
 
 (defapi service-routes
         {:swagger {:ui   "/swagger-ui"
@@ -38,6 +23,8 @@
 
         (context "/api/events" []
                  :tags ["Events"]
+                 :responses {200 {:schema [Event] :description "Downloaded and parsed correct"}
+                             500 {:description "Could not download from IANSEO"}}
                  (GET "/" []
                       :summary "Returns all events in Norway for the current year"
-                      (ok (scrape-event-data (fetch-event-page))))))
+                      (ok (eventsapi/scrape-event-data (eventsapi/fetch-event-page))))))

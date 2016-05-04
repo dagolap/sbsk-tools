@@ -6,7 +6,8 @@
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
             [sbsk-tools.ajax :refer [load-interceptors!]]
-            [ajax.core :refer [GET POST]])
+            [sbsk-tools.pages.home-page]
+            [sbsk-tools.pages.events])
   (:import goog.History))
 
 (defn nav-link [uri title page collapsed?]
@@ -29,42 +30,11 @@
          [nav-link "#/" "Hovedside" :home collapsed?]
          [nav-link "#/events" "Stevner" :about collapsed?]]]])))
 
-(def filtered-clubs (r/atom ["Geita" "Sverr" "Tustn" "Yrjar" "Stoks" "VIGRA"]))
-(defn event-in-midtnorge [ev]
-  (some #(= (:organizer-short ev) %) @filtered-clubs))
-
-(def events (r/atom ()))
-(defn events-page []
-  (GET "/api/events" {
-                      :handler #(reset! events %)})
-  [:div.container
-   [:div.row
-    (if (empty? @events) [:div.col-md-12 "Laster stevner..."]
-                         (for [ev (filter event-in-midtnorge @events)]
-                           ^{:key (first ev)} [:div.col-md-12
-                                               [:div.row
-                                                [:div.col-md-12
-                                                 [:h3 (str (:date ev) " - " (:competition ev) " - " (:organizer-full ev))]]]
-                                               [:div.row.last-in-item
-                                                [:div.col-md-3
-                                                 [:span (:date ev)]]
-                                                [:div.col-md-3
-                                                 [:span (:competition ev)]]
-                                                [:div.col-md-6
-                                                 [:span (:comments ev)]]]]))]])
-
-(defn home-page []
-  [:div.container
-   [:div.jumbotron
-    [:h1 "Sverresborg Bueskytterverktøy"]
-    [:p "Her finnes diverse hjelpsomme verktøy ifm. bueskyting i Norge."]
-    ]
-   [:div.row
-    [:div.col-md-12 [:a {:href "#/events"} "Stevner"]]]])
-
+;; -------------------------
+;; Page configuration
 (def pages
-  {:home   #'home-page
-   :events #'events-page})
+  {:home   #'sbsk-tools.pages.home-page/home-page
+   :events #'sbsk-tools.pages.events/events-page})
 
 (defn page []
   [(pages (session/get :page))])

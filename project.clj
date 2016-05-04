@@ -32,7 +32,8 @@
                  [org.xerial/sqlite-jdbc "3.8.11.2"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [luminus-immutant "0.2.0"]
-                 [enlive "1.1.6"]]
+                 [enlive "1.1.6"]
+                 [clj-time "0.11.0"]]
 
   :min-lein-version "2.0.0"
 
