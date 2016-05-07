@@ -22,8 +22,10 @@
 ;; TODO: Do some fancy caching and something
 ;; ----------------
 ;; Fetch web page
+
+(defonce ianseo-base-url "http://nor.service.ianseo.net")
 (defonce event-page-data
-         (e/html-resource (URL. "http://nor.service.ianseo.net/General/CompetitionList.php?Lang=en")))
+         (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en"))))
 
 ;; ----------------
 ;; Helper functions to retrieve correct data from a line
@@ -47,7 +49,8 @@
      :organizer-full  (str/trim (if (nil? (retrieve-organizer content)) "" (subs (retrieve-organizer content) 3)))
      :competition     (first (:content (nth content 4)))
      :date            (date-from-parts (str/split (retrieve-date content) #"\s"))
-     :comments        (first (:content (nth content 5)))}))
+     :comments        (first (:content (nth content 5)))
+     :statuslink      (str ianseo-base-url (:href (:attrs (first (:content (nth content 0))))))}))
 
 (defn map-all-events []
   "Retrieves all events from the Norwegian event list."

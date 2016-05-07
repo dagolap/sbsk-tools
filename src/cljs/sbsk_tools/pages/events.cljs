@@ -49,6 +49,15 @@
     (str (time/day parsed-date) ". " (month-to-monthname (time/month parsed-date)))
     ))
 
+(defn has-invitation? [ev]
+  (if (not (nil? (:statuslink ev)))
+    (do (.log js/console (.indexOf (:statuslink ev) "Invitation.pdf")) (>= (.indexOf (:statuslink ev) "Invitation.pdf") 0))
+    false))
+
+(defn is-finished? [ev]
+  (if (not (nil? (:statuslink ev)))
+    (>= (.indexOf (:statuslink ev) "CompetitionDetail.php") 0)
+    false))
 
 (defn form-filters []
   [:div
@@ -61,15 +70,15 @@
                                              (swap! view-configuration assoc :only-future? (true? (-> ev .-target .-checked)))
                                              (generate-shown-events @events shown-events))}]
       "Kun fremtidige stevner"]]]
-  [:div.row.form-filters
-   [:div.col-md-12
-    [:label
-     [:input#only-midtnorge {:type           "checkbox"
-                             :defaultChecked (:only-midtnorge? @view-configuration)
-                             :on-change      (fn [ev]
-                                               (swap! view-configuration assoc :only-midtnorge? (true? (-> ev .-target .-checked)))
-                                               (generate-shown-events @events shown-events))}]
-     "Kun stevner i midtnorge"]]]])
+   [:div.row.form-filters
+    [:div.col-md-12
+     [:label
+      [:input#only-midtnorge {:type           "checkbox"
+                              :defaultChecked (:only-midtnorge? @view-configuration)
+                              :on-change      (fn [ev]
+                                                (swap! view-configuration assoc :only-midtnorge? (true? (-> ev .-target .-checked)))
+                                                (generate-shown-events @events shown-events))}]
+      "Kun stevner i midtnorge"]]]])
 
 (defn events-page []
   (GET "/api/events" {:handler (fn [incoming]
@@ -85,8 +94,15 @@
           ^{:key (:event-id ev)}
           [:div.col-md-12
            [:div.row
-            [:div.col-md-12
-             [:h4 (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]]
+            [:div.col-md-8
+
+             [:h4 (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
+            [:div.col-md-4
+             [:span.pull-right.status
+              (if (has-invitation? ev)
+                [:a.btn.btn-primary {:href (:statuslink ev)} "Invitasjon"]
+                [:span])
+              ]]]
            [:div.row.last-in-item
             [:div.col-md-3
              [:span (:competition ev)]]
