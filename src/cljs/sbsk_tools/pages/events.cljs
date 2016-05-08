@@ -80,6 +80,24 @@
                                                 (generate-shown-events @events shown-events))}]
       "Kun stevner i midtnorge"]]]])
 
+(defn event-item [ev]
+  [:div.col-md-12
+
+   [:div.row
+    [:div.col-md-8
+     [:h4 (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
+    [:div.col-md-4
+     [:span.pull-right.status
+      (if (has-invitation? ev)
+        [:a.btn.btn-primary {:href (:statuslink ev)} "Invitasjon"]
+        [:span])]]]
+
+   [:div.row.last-in-item
+    [:div.col-md-3
+     [:span (:competition ev)]]
+    [:div.col-md-9
+     [:span (:comments ev)]]]])
+
 (defn events-page []
   (GET "/api/events" {:handler (fn [incoming]
                                  (reset! events incoming)
@@ -92,19 +110,4 @@
         [:div.col-md-12 "Laster stevner..."]
         (for [ev @shown-events]
           ^{:key (:event-id ev)}
-          [:div.col-md-12
-           [:div.row
-            [:div.col-md-8
-
-             [:h4 (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
-            [:div.col-md-4
-             [:span.pull-right.status
-              (if (has-invitation? ev)
-                [:a.btn.btn-primary {:href (:statuslink ev)} "Invitasjon"]
-                [:span])
-              ]]]
-           [:div.row.last-in-item
-            [:div.col-md-3
-             [:span (:competition ev)]]
-            [:div.col-md-9
-             [:span (:comments ev)]]]]))]]))
+          [event-item ev]))]]))
