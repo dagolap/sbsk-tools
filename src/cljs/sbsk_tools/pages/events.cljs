@@ -81,33 +81,38 @@
       "Kun stevner i midtnorge"]]]])
 
 (defn event-item [ev]
-  [:div.col-md-12
-
-   [:div.row
-    [:div.col-md-8
-     [:h4 (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
-    [:div.col-md-4
+  [:li
+   [:div.timeline-badge.success [:i (month-to-monthname (time/month (timec/from-date (:date ev))))]]
+   [:div.timeline-panel
+    [:div.timeline-heading
+     [:h4.timeline-title (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
+    [:div.timeline-body
+     [:div
+      [:div (:competition ev)]
+      [:div (:comments ev)]]
      [:span.pull-right.status
       (if (has-invitation? ev)
-        [:a.btn.btn-primary {:href (:statuslink ev)} "Invitasjon"]
-        [:span])]]]
+        [:a.btn.btn-success {:href (:statuslink ev)} "Invitasjon"]
+        [:span])]]]])
 
-   [:div.row.last-in-item
-    [:div.col-md-3
-     [:span (:competition ev)]]
-    [:div.col-md-9
-     [:span (:comments ev)]]]])
+(defn event-list []
+  (if (empty? @shown-events)
+    [:div.container
+     [:div.row
+      [:div.col-md-12 "Laster stevner..."]]]
+
+    [:div.container
+     [:ul.timeline
+      (for [ev @shown-events]
+        ^{:key (:event-id ev)}
+        [event-item ev])]]))
 
 (defn events-page []
   (GET "/api/events" {:handler (fn [incoming]
                                  (reset! events incoming)
                                  (generate-shown-events @events shown-events))})
   (fn []
-    [:div.container
-     (form-filters)
-     [:div.row
-      (if (empty? @shown-events)
-        [:div.col-md-12 "Laster stevner..."]
-        (for [ev @shown-events]
-          ^{:key (:event-id ev)}
-          [event-item ev]))]]))
+    [:div
+     [:div.container
+      (form-filters)]
+     [event-list]]))
