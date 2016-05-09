@@ -4,6 +4,8 @@
             [clj-time.core :as time])
   (:import (java.net URL)))
 
+(defonce ianseo-base-url "http://nor.service.ianseo.net")
+
 (defn month-name-to-number [month-name]
   (case month-name
     "jan." 1
@@ -47,7 +49,6 @@
 
 ;; ----------------
 ;; Fetch web page
-(defonce ianseo-base-url "http://nor.service.ianseo.net")
 (def event-page-data
   (let [latest-source (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))]
   {:competition-source                  latest-source
