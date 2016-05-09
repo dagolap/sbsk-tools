@@ -19,21 +19,6 @@
     "nov." 11
     "des." 12))
 
-;; TODO: Do some fancy caching and something
-;; ----------------
-;; Fetch web page
-
-(defonce ianseo-base-url "http://nor.service.ianseo.net")
-(def event-page-data
-  {:competition-source                  (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))
-   :competition-source-cached-timestamp (time/now)})
-
-(defn get-page-data []
-  (when (> (time/in-millis (time/interval (:competition-source-cached-timestamp event-page-data) (time/now))) 600000)
-    (def event-page-data (assoc event-page-data :competition-source (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))
-                                                :competition-source-cached-timestamp (time/now))))
-  (:competition-source event-page-data))
-
 ;; ----------------
 ;; Helper functions to retrieve correct data from a line
 (defn retrieve-date [content]
@@ -59,9 +44,30 @@
      :comments        (first (:content (nth content 5)))
      :statuslink      (str ianseo-base-url (:href (:attrs (first (:content (nth content 0))))))}))
 
+
+;; ----------------
+;; Fetch web page
+(defonce ianseo-base-url "http://nor.service.ianseo.net")
+(def event-page-data
+  (let [latest-source (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))]
+  {:competition-source                  latest-source
+   :competitions                        (map map-event (e/select latest-source [:tr.status1]))
+   :competition-source-cached-timestamp (time/now)}))
+
+(defn get-page-data []
+  (when (> (time/in-millis (time/interval (:competition-source-cached-timestamp event-page-data) (time/now))) 600000)
+    (let [latest-source (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))]
+    (def event-page-data (assoc event-page-data :competition-source latest-source
+                                                :competitions (map map-event (e/select latest-source [:tr.status1]))
+                                                :competition-source-cached-timestamp (time/now)))))
+  (:competitions event-page-data))
+
+
+;; -------------------
+;; Used by web service endpoints
 (defn map-all-events []
   "Retrieves all events from the Norwegian event list."
-  (map map-event (e/select (get-page-data) [:tr.status1])))
+  (get-page-data))
 
 (defn latest-competition-cache []
   "Returns latest cache time for competition page"
