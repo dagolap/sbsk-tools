@@ -24,8 +24,15 @@
 ;; Fetch web page
 
 (defonce ianseo-base-url "http://nor.service.ianseo.net")
-(defonce event-page-data
-         (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en"))))
+(def event-page-data
+  {:competition-source                  (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))
+   :competition-source-cached-timestamp (time/now)})
+
+(defn get-page-data []
+  (when (> (time/in-millis (time/interval (:competition-source-cached-timestamp event-page-data) (time/now))) 600000)
+    (def event-page-data (assoc event-page-data :competition-source (e/html-resource (URL. (str ianseo-base-url "/General/CompetitionList.php?Lang=en")))
+                                                :competition-source-cached-timestamp (time/now))))
+  (:competition-source event-page-data))
 
 ;; ----------------
 ;; Helper functions to retrieve correct data from a line
@@ -54,4 +61,8 @@
 
 (defn map-all-events []
   "Retrieves all events from the Norwegian event list."
-  (map map-event (e/select event-page-data [:tr.status1])))
+  (map map-event (e/select (get-page-data) [:tr.status1])))
+
+(defn latest-competition-cache []
+  "Returns latest cache time for competition page"
+  (.toDate (:competition-source-cached-timestamp event-page-data)))

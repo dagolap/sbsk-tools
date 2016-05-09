@@ -11,11 +11,11 @@ Web application to host various archery related tools for use by [Sverresborg Bu
 * [x] Show events in a simple timeline
 * [x] Simple filtering of future events only
 * [X] Simple filtering of events local to region Midt-Norge
+* [x] Cache mechanism so page is loaded from main server if older than 10 minutes
 * [ ] Possibility to custom filter events
 * [ ] Save custom filter in local storage
 * [ ] Better display og events in event list
 * [ ] Show scores for finished events
-* [ ] Cache mechanism so page is loaded from main server if older than 10 minutes
 
 
 #### Future plans
