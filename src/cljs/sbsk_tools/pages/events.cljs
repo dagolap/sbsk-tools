@@ -63,22 +63,21 @@
   [:div
    [:div.row.form-filters
     [:div.col-md-12
-     [:label
+     [:div.checkbox.checkbox-success
       [:input#only-future {:type           "checkbox"
                            :defaultChecked (:only-future? @view-configuration)
                            :on-change      (fn [ev]
                                              (swap! view-configuration assoc :only-future? (true? (-> ev .-target .-checked)))
                                              (generate-shown-events @events shown-events))}]
-      "Kun fremtidige stevner"]]]
-   [:div.row.form-filters
-    [:div.col-md-12
-     [:label
+      [:label {:for "only-future"} "Kun fremtidige stevner"]]
+     [:div.checkbox.checkbox-success
       [:input#only-midtnorge {:type           "checkbox"
                               :defaultChecked (:only-midtnorge? @view-configuration)
                               :on-change      (fn [ev]
                                                 (swap! view-configuration assoc :only-midtnorge? (true? (-> ev .-target .-checked)))
                                                 (generate-shown-events @events shown-events))}]
-      "Kun stevner i midtnorge"]]]])
+      [:label {:for "only-midtnorge"} "Kun stevner i midtnorge"]
+      ]]]])
 
 (defn event-item [ev]
   [:li
