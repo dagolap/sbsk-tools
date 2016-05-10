@@ -28,7 +28,8 @@
         [:a.navbar-brand {:href "#/"} "Sverresborg Bueskyttere - Verktøy"]
         [:ul.nav.navbar-nav
          [nav-link "#/" "Hovedside" :home collapsed?]
-         [nav-link "#/events" "Stevner" :about collapsed?]]]])))
+         [nav-link "#/events" "Stevner" :about collapsed?]
+         [nav-link "/swagger-ui" "API" "" collapsed?]]]])))
 
 ;; -------------------------
 ;; Page configuration
