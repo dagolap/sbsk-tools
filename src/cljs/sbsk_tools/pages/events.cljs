@@ -51,7 +51,7 @@
 
 (defn has-invitation? [ev]
   (if (not (nil? (:statuslink ev)))
-    (do (.log js/console (.indexOf (:statuslink ev) "Invitation.pdf")) (>= (.indexOf (:statuslink ev) "Invitation.pdf") 0))
+    (>= (.indexOf (:statuslink ev) "Invitation.pdf") 0)
     false))
 
 (defn is-finished? [ev]

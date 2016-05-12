@@ -14,7 +14,7 @@ Web application to host various archery related tools for use by [Sverresborg Bu
 * [x] Cache mechanism so page is loaded from main server if older than 10 minutes
 * [ ] Possibility to custom filter events
 * [ ] Save custom filter in local storage
-* [ ] Better display og events in event list
+* [ ] Better display of events in event list
 * [ ] Show scores for finished events
 
 
