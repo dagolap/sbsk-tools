@@ -28,24 +28,10 @@
 (defn generate-shown-events [all-events shown-events]
   (reset! shown-events (filter event-valid-according-to-view-config (filter event-in-filter-list @events))))
 
-(defn month-to-monthname [month]
-  (case month
-    1 "januar"
-    2 "februar"
-    3 "mars"
-    4 "april"
-    5 "mai"
-    6 "juni"
-    7 "juli"
-    8 "august"
-    9 "september"
-    10 "oktober"
-    11 "november"
-    12 "desember"))
 
 (defn date-to-string [date]
   (let [parsed-date (timec/from-date date)]
-    (str (time/day parsed-date) ". " (month-to-monthname (time/month parsed-date)))
+    (str (time/day parsed-date) ". " (facts/month-to-name-lower (time/month parsed-date)))
     ))
 
 (defn has-invitation? [ev]
@@ -80,7 +66,7 @@
 
 (defn event-item [ev]
   [:li
-   [:div.timeline-badge.success [:i (month-to-monthname (time/month (timec/from-date (:date ev))))]]
+   [:div.timeline-badge.success [:i (facts/month-to-name (time/month (timec/from-date (:date ev))))]]
    [:div.timeline-panel
     [:div.timeline-heading
      [:h4.timeline-title (str (date-to-string (:date ev)) " - " (:organizer-full ev))]]
