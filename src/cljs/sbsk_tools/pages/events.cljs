@@ -1,5 +1,6 @@
 (ns sbsk-tools.pages.events
   (:require [reagent.core :as r]
+            [sbsk-tools.events.filters :as eventfilters]
             [cljs-time.core :as time]
             [cljs-time.coerce :as timec]
             [ajax.core :refer [GET POST]]))
@@ -14,13 +15,13 @@
 
 (defn event-in-filter-list [ev]
   (if (:only-midtnorge? @view-configuration)
-    (some #(= (:organizer-short ev) %) (:filtered-clubs @view-configuration))
+    (eventfilters/organizer-in-list ev (:filtered-clubs @view-configuration))
     true))
 
 
 (defn event-valid-according-to-view-config [ev]
   (if (:only-future? @view-configuration)
-    (>= (:date ev) (time/today-at-midnight))
+    (eventfilters/date-in-future ev)
     true))
 
 (def events (r/atom ()))
