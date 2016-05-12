@@ -68,7 +68,10 @@
       [:div (:comments ev)]]
      [:span.pull-right.status
       (if (eventfilters/has-invitation? ev)
-        [:a.btn.btn-success {:href (:statuslink ev)} "Invitasjon"]
+        [:a.btn.btn-success {:href (:statuslink ev)} [:i.fa.fa-file-text-o] " Invitasjon"]
+        nil)
+      (if (eventfilters/is-finished? ev)
+        [:a.btn.btn-success {:href (:statuslink ev)} [:i.fa.fa-list-alt] " Resultater"]
         nil)]]]])
 
 (defn event-list []
