@@ -13,13 +13,13 @@
 
 (defn event-in-filter-list [ev]
   (if (:only-midtnorge? @view-configuration)
-    (eventfilters/organizer-in-list ev (:filtered-clubs @view-configuration))
+    (eventfilters/organizer-in-list? ev (:filtered-clubs @view-configuration))
     true))
 
 
 (defn event-valid-according-to-view-config [ev]
   (if (:only-future? @view-configuration)
-    (eventfilters/date-in-future ev)
+    (eventfilters/date-in-future? ev)
     true))
 
 (def events (r/atom ()))
@@ -34,15 +34,6 @@
     (str (time/day parsed-date) ". " (facts/month-to-name-lower (time/month parsed-date)))
     ))
 
-(defn has-invitation? [ev]
-  (if (not (nil? (:statuslink ev)))
-    (>= (.indexOf (:statuslink ev) "Invitation.pdf") 0)
-    false))
-
-(defn is-finished? [ev]
-  (if (not (nil? (:statuslink ev)))
-    (>= (.indexOf (:statuslink ev) "CompetitionDetail.php") 0)
-    false))
 
 (defn form-filters []
   [:div
@@ -64,6 +55,7 @@
       [:label {:for "only-midtnorge"} "Kun stevner i midtnorge"]
       ]]]])
 
+
 (defn event-item [ev]
   [:li
    [:div.timeline-badge.success [:i (facts/month-to-name (time/month (timec/from-date (:date ev))))]]
@@ -75,9 +67,9 @@
       [:div (:competition ev)]
       [:div (:comments ev)]]
      [:span.pull-right.status
-      (if (has-invitation? ev)
+      (if (eventfilters/has-invitation? ev)
         [:a.btn.btn-success {:href (:statuslink ev)} "Invitasjon"]
-        [:span])]]]])
+        nil)]]]])
 
 (defn event-list []
   (if (empty? @shown-events)
