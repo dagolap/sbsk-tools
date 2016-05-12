@@ -1,6 +1,7 @@
 (ns sbsk-tools.pages.events
   (:require [reagent.core :as r]
             [sbsk-tools.events.filters :as eventfilters]
+            [sbsk-tools.events.facts :as facts]
             [cljs-time.core :as time]
             [cljs-time.coerce :as timec]
             [ajax.core :refer [GET POST]]))
@@ -8,10 +9,7 @@
 (def view-configuration (r/atom {
                                  :only-future?    true
                                  :only-midtnorge? true
-                                 :filtered-clubs  ["Bøfjo" "Geita" "HEGIL" "Harøy" "HITRA" "Hunde"
-                                                   "GOMA" "Yrjar" "Levah" "Lyngs" "Malvi" "Molde"
-                                                   "Roan" "SALSN" "Stoks" "Surna" "Sverr" "Tustn"
-                                                   "Ulvun" "Verda" "Vestn" "VIGRA" "Volla" "Ålesu"]}))
+                                 :filtered-clubs  (:clubs (:midtnorge facts/club-facts))}))
 
 (defn event-in-filter-list [ev]
   (if (:only-midtnorge? @view-configuration)
