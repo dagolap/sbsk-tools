@@ -4,7 +4,7 @@
             [clj-time.core :as time])
   (:import (java.net URL)))
 
-(defonce ianseo-base-url "http://nor.service.ianseo.net")
+(defonce ianseo-base-url "https://nor.service.ianseo.net")
 
 (defn month-name-to-number [month-name]
   (case month-name
