@@ -8,18 +8,18 @@
 
 (defn month-name-to-number [month-name]
   (case month-name
-    "Jan" 1
-    "Feb" 2
-    "Mar" 3
-    "Apr" 4
-    "May" 5
-    "Jun" 6
-    "Jul" 7
-    "Aug" 8
-    "Sep" 9
-    "Oct" 10
-    "Nov" 11
-    "Dec" 12))
+    "jan."      1
+    "feb."      2
+    "mars"      3
+    "april"     4
+    "mai"       5
+    "juni"      6
+    "juli"      7
+    "aug."      8
+    "sep."      9
+    "okt."      10
+    "nov."      11
+    "des."      12))
 
 ;; ----------------
 ;; Helper functions to retrieve correct data from a line
