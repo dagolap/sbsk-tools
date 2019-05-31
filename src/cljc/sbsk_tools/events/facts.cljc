@@ -2,10 +2,10 @@
   (:require [clojure.string :as str]))
 
 (def ^:const club-facts {
-                         :midtnorge {:clubs ["bøfjo" "geita" "hegil" "harøy" "hitra" "hunde"
-                                             "goma" "yrjar" "levah" "lyngs" "malvi" "molde"
-                                             "roan" "salns" "stoks" "surna" "sverr" "tustn"
-                                             "ulvun" "verda" "vestn" "vigra" "volla" "ålesu"]}
+                         :midtnorge {:clubs ["geita" "goma" "hegil" "harøy" "hunde" "levah"
+                                             "lyngs" "molde" "roan" "salsn" "stoks" "surna"
+                                             "sverr" "tustn" "ulvun" "verda" "v-hit" "vestn"
+                                             "vigra" "volla" "yrjar" "ålesu"]}
                          })
 
 (defn month-to-name-lower [month]
