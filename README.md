@@ -29,11 +29,17 @@ Web application to host various archery related tools for use by [Sverresborg Bu
 You will need [Leiningen][2] 2.0 or above installed.
 
 
-## Running
+## Local development, run dev server
 
 To start a web server for the application, run:
 
     lein run
+
+## Self contained build procedure
+
+Required docker, nothing else.
+
+`docker build . -t sbsk-tools:1.0.0` or similar
 
 
 [1]: https://sbsk.no
